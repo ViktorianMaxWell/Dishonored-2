@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dishonored: 1&2</title>
+    <style>
+        /* Подключение кастомного шрифта. 
+           Положи файл шрифта (например, FMBolyarOrnatePro.woff2) в папку с сайтом. */
+        @font-face {
+            font-family: 'FM Bolyar Ornate Pro';
+            src: url('FMBolyarOrnatePro.woff2') format('woff2'),
+                 url('FMBolyarOrnatePro.woff') format('woff'),
+                 url('FMBolyarOrnatePro.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        :root {
+            /* Светлая песочная палитра Серконоса */
+            --bg-main: #F2E8D5;       /* Основной светлый песочный фон */
+            --bg-card: #EAE0C8;       /* Чуть более тёмный песок для карточек */
+            --text-main: #2C241B;     /* Тёмно-коричневый для высокой читаемости */
+            --text-muted: #5C4D3C;    /* Приглушённый коричневый */
+            --accent: #B8860B;        /* Латунь/Золото Серконоса */
+            --accent-dark: #8B6914;   /* Тёмная бронза */
+            --border-color: #D4C5A3;  /* Цвет границ */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'FM Bolyar Ornate Pro', 'Georgia', 'Times New Roman', serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        header {
+            background: rgba(242, 232, 213, 0.95);
+            border-bottom: 2px solid var(--accent-dark);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px 20px;
+        }
+
+        nav a {
+            color: var(--text-main);
+            text-decoration: none;
+            margin: 5px 15px;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+            border-bottom: 2px solid var(--accent);
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        section {
+            margin-bottom: 60px;
+            padding-top: 20px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            text-align: center;
+            color: var(--accent-dark);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: var(--accent-dark);
+            margin-bottom: 20px;
+            border-left: 5px solid var(--accent);
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: var(--accent-dark);
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .hero-img {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+            border: 3px solid var(--accent);
+            box-shadow: 0 10px 30px rgba(44, 36, 27, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .intro {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 800px;
+            margin: 0 auto;
+            font-style: italic;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        /* Персонажи — сетка */
+        .characters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 5px 15px rgba(44, 36, 27, 0.15);
+        }
+
+        .card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border: 1px solid var(--border-color);
+        }
+
+        .card h3 {
+            font-size: 1.1rem;
+        }
+
+        .card p {
+            font-size: 0.95rem;
+        }
+
+        /* Галерея */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .gallery-item {
+            cursor: pointer;
+            overflow: hidden;
+            border: 2px solid var(--border-color);
+            transition: border-color 0.3s;
+        }
+
+        .gallery-item:hover {
+            border-color: var(--accent);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Модальное окно */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(44, 36, 27, 0.95); /* Тёмный фон для контраста с картинкой */
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            border: 3px solid var(--accent);
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            color: var(--accent);
+            font-size: 40px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .modal-close:hover {
+            color: #fff;
+        }
+
+        .opinion-block {
+            background: var(--bg-card);
+            padding: 30px;
+            border-left: 5px solid var(--accent);
+            margin-bottom: 20px;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .opinion-block h3 {
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .rating {
+            font-size: 1.5rem;
+            color: var(--accent-dark);
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        footer {
+            background: #E0D2B5;
+            border-top: 2px solid var(--accent-dark);
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 50px;
+            color: var(--text-muted);
+        }
+
+        footer p {
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        footer a {
+            color: var(--accent-dark);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        footer a:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+
+        ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <a href="#home">Главная</a>
+            <a href="#about">Об игре</a>
+            <a href="#characters">Персонажи</a>
+            <a href="#gameplay">Геймплей</a>
+            <a href="#gallery">Галерея</a>
+            <a href="#opinion">Мнение автора</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Главная страница -->
+        <section id="home" class="hero">
+            <h1>Dishonored</h1>
+            <img src="DishonoredLogo.jpg" alt="Обложка Dishonored" class="hero-img">
+            <p class="intro">Dishonored — это серия иммерсивных симуляторов от первого лица, погружающая игрока в мир, где промышленная революция соседствует с темной магией, а чума уносит тысячи жизней. История о мести, долге и выборе, который определяет судьбу целой империи.</p>
+        </section>
+
+        <!-- Об игре -->
+        <section id="about">
+            <h2>Об игре</h2>
+            <div class="grid-2">
+                <div>
+                    <h3>Основная информация</h3>
+                    <ul>
+                        <li><strong>Жанр:</strong> Immersive sim, Stealth, Action-adventure</li>
+                        <li><strong>Год выхода:</strong> 2012 (Dishonored), 2016 (Dishonored 2)</li>
+                        <li><strong>Разработчик:</strong> Arkane Studios</li>
+                        <li><strong>Издатель:</strong> Bethesda Softworks</li>
+                    </ul>
+                    <h3>Игровой мир и сюжет</h3>
+                    <p>Действие разворачивается в вымышленной альтернативной вселенной, где разделённые островные цивилизации объединены имперским знаменем семьи Колдуин. Основное действие игр происходит в городах Дануолл и Карнака, стилизованных под Лондон и Эдинбург конца XIX века. В первой части бывший королевский защитник Корво Аттано ложно обвинён в убийстве императрицы Джессамины Колдуин и обесчещен перед лицом народа, из чего и происходит название игры "Dishonored" — "Обесчещенный". Чтобы вернуть трон законной наследнице, а по совместительству своей дочери, Эмили Колдуин, он должен пройти тяжёлый путь: он будет скрытен и бесшумен, если жаждет мира и блага своему народу, или же зальёт улицы Дануолла кровью и обречёт империю на хаос и тиранию. Во второй части уже повзрослевшая Эмили (или снова Корво, в зависимости от выбора игрока) сталкивается с узурпацией власти Делайлой Копперспун, сводной сестрой Джессамины, и отправляется в солнечную, но полную опасностей родину Корво — Карнаку.</p>
+                </div>
+                <div>
+                    <h3>Интересные факты</h3>
+                    <ul>
+                        <li>Архитектура и дизайн мира создавались с опорой на реальную архитектуру Лондона, Эдинбурга и Праги.</li>
+                        <li>Технология китового масла в игре — это альтернативный источник энергии, заменивший нефть и уголь.</li>
+                        <li>Система «Хаоса» (Chaos) заметно влияет на мир: чем больше людей вы убиваете, тем больше крыс, жертв чумы и мрачных событий происходит в мире игры.</li>
+                        <li>Знаменитые Костяные амулеты создаются из костей китов и наделяют владельца случайными магическими эффектами.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Персонажи -->
+        <section id="characters">
+            <h2>Персонажи</h2>
+            <div class="characters-grid">
+
+                <div class="card">
+                    <img src="KorvoYoung.jpg" alt="Молодой Корво">
+                    <h3>Корво Аттано (молодой)</h3>
+                    <p>Лорд-Защитник императрицы Джессамины в событиях Dishonored. Молодой, целеустремлённый и смертоносный мастер клинка. После ложного обвинения получает метку Чужого и становится молниеносным призраком на улицах Дануолла.</p>
+                </div>
+
+                <div class="card">
+                    <img src="KorvoOld.jpg" alt="Старый Корво">
+                    <h3>Корво Аттано (старый)</h3>
+                    <p>Спустя 15 лет в Dishonored 2. Седеющий, уставший, но не потерявший мастерства. Его арсенал включает телепортацию, вселение в существ, остановку времени, управление стаями крыс и мощные потоки ветра — отсылка к ветреной родине, Серконосу.</p>
+                </div>
+
+                <div class="card">
+                    <img src="Emily.jpg" alt="Эмили Колдуин">
+                    <h3>Эмили Колдуин</h3>
+                    <p>Законная императрица Островов. В Dishonored 2 выступает как играбельный персонаж с уникальным набором умений: притяжение к поверхностям, создание двойников, становление ползучей тенью. Её стиль боя более гибкий и тактический.</p>
+                </div>
+
+                <div class="card">
+                    <img src="Jessamine.jpg" alt="Джессамина Колдуин">
+                    <h3>Джессамина Колдуин</h3>
+                    <p>Императрица Островов, мать Эмили. Мудрая и прогрессивная правительница, стремившаяся искоренить чуму. Её убийство в начале первой части запускает всю цепочку событий серии. Её образ присутствует в воспоминаниях и видениях.</p>
+                </div>
+
+                <div class="card">
+                    <img src="Daud.jpg" alt="Дауд">
+                    <h3>Дауд</h3>
+                    <p>Легендарный наёмный убийца, лидер банды «Китобоев». Запустил цепочку ключевых событий, убив Джессамину. Морально сложный персонаж: в дополнениях раскрывается как личность, которой хочется сопереживать. Владеет отточенным мастерством ближнего боя.</p>
+                </div>
+
+                <div class="card">
+                    <img src="Delilah.jpg" alt="Делайла Копперспун">
+                    <h3>Делайла Копперспун</h3>
+                    <p>Главная антагонистка Dishonored 2. Сводная сестра императрицы Джессамины и могущественная ведьма. Использует тёмную магию для захвата власти, пытаясь стереть границу между миром живых и Бездной. Глубоко травмированная героиня.</p>
+                </div>
+
+                <div class="card">
+                    <img src="Sokolov.jpg" alt="Антон Соколов">
+                    <h3>Антон Соколов</h3>
+                    <p>Придворный лекарь и художник. Гениальный учёный, создавший ворвань, основу для инженерии и сыворотку от чумы. Циничный, высокомерный, но преданный Корво и Эмили. Его дневники раскрывают тёмные тайны мира игры.</p>
+                </div>
+
+                <div class="card">
+                    <img src="Megan.jpg" alt="Меган Фостер">
+                    <h3>Меган Фостер</h3>
+                    <p>Член банды "Китобоев" в первой части, позже — капитан судна "Dreadful Wale". В Dishonored 2 она становится верным союзником протагониста и всеми силами помогает главному герою приблизиться к развязке.</p>
+                </div>
+
+                <div class="card">
+                    <img src="Outsider.jpg" alt="Чужой">
+                    <h3>Чужой</h3>
+                    <p>Безвольный заложник и могущественный бог самой Бездны. Был похищен древним культом. В играх серии выступает всевластным, но не вмешивающимся проводником, позволяющим герою самому выбирать свой путь к финалу.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Геймплей -->
+        <section id="gameplay">
+            <h2>Геймплей</h2>
+            <div class="grid-2">
+                <div>
+                    <h3>Основные механики</h3>
+                    <p>Игровой процесс строится на сочетании стелса, паркура и умений, дарованных меткой Чужого. Игрок может перемещаться по уровням вертикально, используя способности и навыки. Боевая система позволяет комбинировать холодное оружие, пистолеты и гаджеты (мины, гранаты, приманки).</p>
+                    <h3>Цели игрока</h3>
+                    <p>Основная цель — устранение или нейтрализация ключевых фигур, стоящих на пути восстановления порядка. Игра поощряет нелинейный подход: каждую миссию можно пройти бескровно или устроить кровавую бойню, усугубив положение в мире.</p>
+                </div>
+                <div>
+                    <h3>Особенности и отличия</h3>
+                    <p>Dishonored выделяется среди других игр жанра Immersive Sim невероятной свободой выбора и проработкой уровней. Каждое задание — это локальная песочница с множеством путей проникновения. Система «Хаоса» делает каждый выбор значимым: стиль прохождения напрямую влияет на концовку, состояние мира и поведение NPC.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Галерея -->
+        <section id="gallery">
+            <h2>Галерея</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item" onclick="openModal(this)">
+                    <img src="dishonored_screenshot1.jpg" alt="Скриншот 1">
+                </div>
+                <div class="gallery-item" onclick="openModal(this)">
+                    <img src="dishonored_screenshot2.jpg" alt="Скриншот 2">
+                </div>
+                <div class="gallery-item" onclick="openModal(this)">
+                    <img src="dishonored_screenshot3.jpg" alt="Скриншот 3">
+                </div>
+                <div class="gallery-item" onclick="openModal(this)">
+                    <img src="dishonored_screenshot4.jpg" alt="Скриншот 4">
+                </div>
+                <div class="gallery-item" onclick="openModal(this)">
+                    <img src="dishonored_screenshot5.jpg" alt="Скриншот 5">
+                </div>
+                <div class="gallery-item" onclick="openModal(this)">
+                    <img src="dishonored_screenshot6.jpg" alt="Скриншот 6">
+                </div>
+                <div class="gallery-item" onclick="openModal(this)">
+                    <img src="dishonored_screenshot7.jpg" alt="Скриншот 7">
+                </div>
+                <div class="gallery-item" onclick="openModal(this)">
+                    <img src="dishonored_screenshot8.jpg" alt="Скриншот 8">
+                </div>
+            </div>
+        </section>
+
+        <!-- Модальное окно -->
+        <div id="imageModal" class="modal" onclick="closeModal()">
+            <span class="modal-close">&times;</span>
+            <img class="modal-content" id="modalImg">
+        </div>
+
+        <!-- Мнение автора -->
+        <section id="opinion">
+            <h2>Мнение автора</h2>
+            <div class="opinion-block">
+                <h3>Почему мне нравится эта игра</h3>
+                <p>Эта серия игр является редким и качественным продуктом вне времени, построенным в стилистике Англии/Франции эпохи декаданса. Меня больше всего зацепил геймплей именно за Корво Аттано и его игровой скиллсет. Возможность стать молниеносным и при этом скрытным уроженцем Серконоса, вновь и вновь спасающим свою империю и своих императриц, в мрачной атмосфере Дануолла, а после чуть ли не обречённой, но при этом сохраняющей надежду Карнаки.</p>
+            </div>
+            <div class="opinion-block">
+                <h3>Кому я её рекомендую</h3>
+                <p>Всем ценителям эпохи декаданса, любителям художественных искусств, концептуализма и стелс игр.</p>
+            </div>
+            <div class="opinion-block">
+                <h3>Оценка</h3>
+                <p class="rating">10/10 — однозначно.</p>
+                <p>Среди иммерсивных симуляторов безоговорочно лучшая. Очень продуманная, развитая и главное завершённая серия игр.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Подвал -->
+    <footer>
+        <p><strong>Автор работы:</strong> Пеньков Максим</p>
+        <p><strong>Группа:</strong> СА1-41</p>
+        <p><strong>Год создания сайта:</strong> 2026</p>
+        <p><strong>Источник материалов:</strong> <a href="https://dishonored.fandom.com/ru/wiki/Dishonored_Wiki" target="_blank">Dishonored Wiki (Fandom)</a> | <a href="https://www.playground.ru/gallery/dishonored_2/" target="_blank">Playground Dishonored Gallery</a></p>
+    </footer>
+
+    <script>
+        function openModal(element) {
+            var modal = document.getElementById("imageModal");
+            var modalImg = document.getElementById("modalImg");
+            var img = element.getElementsByTagName("img")[0];
+            modal.style.display = "flex";
+            modalImg.src = img.src;
+        }
+
+        function closeModal() {
+            var modal = document.getElementById("imageModal");
+            modal.style.display = "none";
+        }
+    </script>
+</body>
+</html>
